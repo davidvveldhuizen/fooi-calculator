@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fooiCalculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mainContainer">
+    <p>fooi Calculator</p>
+    <div class="fooi">
+      <p>totale fooi: <input class="fooiInput" type="number"></p>
+    </div>
+    <div class="members">
+      <p>members</p>
+      <div class="tags">
+        <p class="naamTag">naam: </p>
+        <p class="startTag">start: </p>
+        <p class="stopTag">stop: </p>
+        <p class="pauzeTag">pauze: </p>
+        <p class="urenTag">uren: </p>
+      </div>
+      <div class="memberStyle" id="member1">
+        <div class="naamContainer">
+          <input class="naamInput" type="text">
+        </div>
+        <div class="startContainer">
+          <input class="startInput" type="time">
+        </div>
+        <div class="stopContainer">
+          <input class="stopInput" type="time">
+        </div>
+        <div class="pauzeContainer">
+          <input class="pauzeInput" type="checkbox">
+        </div>
+        <div class="uren">
+          <input class="urenInput" type="time">
+        </div>
+
+      </div>
+      <div class="bottom">
+        <button class="addMember">add member</button>
+        <button class="clearAll">clear all</button>
+      </div>
+    </div>
+    <div class="calculate">
+      <p>calculate</p>
+    </div>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>
