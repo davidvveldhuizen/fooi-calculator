@@ -17,7 +17,7 @@ p{
 .mainContainer{
   margin: 0px;
   background-color: rgb(60, 61, 75);
-  min-width: 300px;
+  width: 460px;
   min-height: 400px;
 
   border-radius: 25px;
@@ -65,7 +65,7 @@ p{
 .tags .stopTag{
   width: 40px;
 }.tags .pauzeTag{
-  width: 80px;
+  width: 60px;
 }.tags .urenTag{
   width: 60px;
 }
@@ -97,8 +97,9 @@ p{
   background-color:rgb(144, 175, 204) ;
 }.memberStyle .naamInput{
   width: 100px;
-}
-.memberStyle .uren{
+}.memberStyle .startInput, .stopInput, .urenInput{
+  width: 65px;
+}.memberStyle .uren{
   margin-right: 10px;
 }
 .memberStyle div{
