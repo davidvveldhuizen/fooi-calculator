@@ -3,72 +3,81 @@ const resultsContainer = document.querySelector(".resultsContainer");
 
 const fooiInput = document.querySelector(".fooiInput");
 
-const addMember = document.querySelector(".addMember");
-const clearAll = document.querySelector(".clearAll");
-const back = document.querySelector(".backButton");
+const addMember = document.querySelector(".addMember"); //button to add a member
+const clearAll = document.querySelector(".clearAll");   //button to delete all data
+const back = document.querySelector(".backButton");     //button to go back to to the calculator from the results
 
-const membersContainer = document.querySelector(".members");
-const firstMember = document.getElementById("member1");
-const members = [firstMember];
+const membersContainer = document.querySelector(".membersContainer"); //containers for all members
+const exampleMember = document.querySelector(".exampleMember"); //example member wich wont be visible and is only used to make new members
+
+const firstMember = cloneMemberFromExample();
+
+const members = membersContainer.children;
 
 const calculate = document.querySelector(".calculate");
 
+function cloneMemberFromExample(){
+  let newMember = exampleMember.cloneNode(true);
+  newMember.classList.remove("exampleMember");
+  newMember.classList.add("memberStyle");
+  newMember.style.display = "flex";
+  membersContainer.append(newMember);
+  return newMember;
+}
+
 addMember.addEventListener("click", ()=>{
-  const nextMember = firstMember.cloneNode(true);
-  nextMember.id = `member${members.length+1}`;
-  
-  nextMember.querySelector(".naamInput").value = "";
-  nextMember.querySelector(".startInput").value = "";
-  nextMember.querySelector(".stopInput").value = "";
-  nextMember.querySelector(".pauzeInput").checked =false;
-  nextMember.querySelector(".urenInput").value = "";
-  membersContainer.insertBefore(nextMember, document.querySelector(".bottom"));
-  members.push(nextMember);
+  const nextMember = cloneMemberFromExample();
 });
 
 clearAll.addEventListener("click", ()=>{
-  for(let i = members.length-1;i>0;i--){
-    membersContainer.removeChild(members[i]);
-    members.pop();
-  }
+  membersContainer.innerHTML ="";
+  const firstMember = cloneMemberFromExample();
   fooiInput.value = "";
-  firstMember.querySelector(".naamInput").value = "";
-  firstMember.querySelector(".startInput").value = "";
-  firstMember.querySelector(".stopInput").value = "";
-  firstMember.querySelector(".pauzeInput").checked =false;
-  firstMember.querySelector(".urenInput").value = "";
 });
 
 membersContainer.addEventListener("click", ()=>{
-  members.forEach(member =>{
-    const startTime = member.querySelector(".startInput").valueAsDate;
-    const stopTime = member.querySelector(".stopInput").valueAsDate;
-    const pauze = member.querySelector(".pauzeInput");
-    const uren = member.querySelector(".urenInput");
-    if(startTime != null && stopTime != null){
-      const startHour = startTime.getHours() -1;
-      const startMinute = startTime.getMinutes();
-      const stopHour = stopTime.getHours()-1;
-      const stopMinute = stopTime.getMinutes();
-      const difHours = stopHour-startHour;
-      const difMinutes = stopMinute - startMinute;
-      let allMinutes = difHours*60 + difMinutes;
-      if(pauze.checked){
-        allMinutes -= 30;
-      }
-      let hours = Math.floor(allMinutes/60);
-      let minutes = allMinutes-hours*60;
-      if(hours<10){
-        hours = `0${hours}`;
-      }
-      if(minutes<10){
-        minutes = `0${minutes}`;
-      }
-      console.log(hours+":"+minutes);
-      uren.value = `${hours}:${minutes}`;
-    }
-  })
+  for(let i =0;i<membersContainer.children.length;i++){
+    const member = membersContainer.children[i];
+    calculateUren(member);
+    removeMember(member);
+  }
 })
+
+function calculateUren(member){
+  const startTime = member.querySelector(".startInput").valueAsDate;
+  const stopTime = member.querySelector(".stopInput").valueAsDate;
+  const pauze = member.querySelector(".pauzeInput");
+  const uren = member.querySelector(".urenInput");
+  if(startTime != null && stopTime != null){
+    const startHour = startTime.getHours() -1;
+    const startMinute = startTime.getMinutes();
+    const stopHour = stopTime.getHours()-1;
+    const stopMinute = stopTime.getMinutes();
+    const difHours = stopHour-startHour;
+    const difMinutes = stopMinute - startMinute;
+    let allMinutes = difHours*60 + difMinutes;
+    if(pauze.checked){
+      allMinutes -= 30;
+    }
+    let hours = Math.floor(allMinutes/60);
+    let minutes = allMinutes-hours*60;
+    if(hours<10){
+      hours = `0${hours}`;
+    }
+    if(minutes<10){
+      minutes = `0${minutes}`;
+    }
+    uren.value = `${hours}:${minutes}`;
+  }
+}
+
+function removeMember(member){
+  const deleteButton = member.querySelector(".delete");
+  deleteButton.addEventListener('click', ()=>{
+    console.log(member);
+    member.remove();
+  })
+}
 
 calculate.addEventListener("click", ()=>{
   let names = [];
@@ -80,6 +89,7 @@ calculate.addEventListener("click", ()=>{
 
   let acces = true;
   
+  //checks if the totale fooi has been filled in     if not then the fooi input will be colored red
   if(fooiInput.value === ""){
     acces = false;
     fooiInput.style.backgroundColor = "red";
@@ -88,34 +98,34 @@ calculate.addEventListener("click", ()=>{
     totaleFooi = fooiInput.valueAsNumber;
   }
 
-  members.forEach(member => { // get data from each member
-    const currMember = membersContainer.querySelector(`#${member.id}`);
-    currNaam = member.querySelector(".naamInput").value;
-    if(currNaam === ""){
-      const m = currMember.querySelector(".naamInput");
-      m.style.backgroundColor = "red";
+  for(let i =0;i<membersContainer.children.length;i++){ // get data from each member
+    const member = membersContainer.children[i];
+
+    //check if the name has been filled in    if not then color the naam input red
+    const naamInput = member.querySelector(".naamInput");
+    if(naamInput.value === ""){ 
+      naamInput.style.backgroundColor = "red";
       acces = false;
     }else{
-      const m = currMember.querySelector(".naamInput");
-      m.style.backgroundColor = "rgb(144, 175, 204)";
+      naamInput.style.backgroundColor = "rgb(144, 175, 204)";
 
-      names.push(currNaam);
+      names.push(naamInput.value);
     }
 
-    const d = member.querySelector(".urenInput").valueAsDate;
-    if(d === null){
-      const ureninperror = currMember.querySelector(".urenInput");
-      ureninperror.style.backgroundColor = "red";
+    // checks if the uren has been filled in    if not then color the uren input red
+    const urenInput = member.querySelector(".urenInput")
+    const urenDate = urenInput.valueAsDate;
+    if(urenDate === null){
+      urenInput.style.backgroundColor = "red";
       acces = false;
     }else{
-      const ureninperror = currMember.querySelector(".urenInput");
-      ureninperror.style.backgroundColor = "rgb(144, 175, 204)";
-      const us = d.getHours()-1;
-      const ms = d.getMinutes();
-      const u = us+(ms/60);
-      uren.push(u);
+      urenInput.style.backgroundColor = "rgb(144, 175, 204)";
+      const onlyHours = urenDate.getHours()-1;
+      const onlyMinutes = urenDate.getMinutes();
+      const allHours = onlyHours+(onlyMinutes/60);
+      uren.push(allHours);
     }
-  });
+  }
 
   if(acces){ // checks for acces
     uren.forEach(i =>{ // counts up all the hours
@@ -139,9 +149,7 @@ function calculateFooi(uren, fooiPerUur){
     innerFooi.push(f);
     change += (uren[i]*fooiPerUur)-f;
   }
-  console.log(change);
   change = Math.round(change*100)/100;
-  console.log(change);
   return innerFooi;
 }
 
@@ -159,7 +167,7 @@ function moveToResults(names, uren, fooi){
 
     newText.querySelector(".naamHere").innerHTML = `${names[i]} `;
     newText.querySelector(".urenHere").innerHTML = `${Math.floor(uren[i]*100)/100} `;
-    newText.querySelector(".fooiHere").innerHTML = `${fooi[i]} `;
+    newText.querySelector(".fooiHere").innerHTML = `&euro;${fooi[i]} `;
 
     results.appendChild(newText);
   }
@@ -168,10 +176,8 @@ function moveToResults(names, uren, fooi){
 back.addEventListener('click', ()=>{
   const results = resultsContainer.querySelector(".results");
   const example = results.querySelector(".example");
-  console.log(results.children);
   results.innerHTML = "";
   results.append(example);
-  console.log(results.children);
   resultsContainer.style.display = "none";
   mainContainer.style.display = "flex";
 })
