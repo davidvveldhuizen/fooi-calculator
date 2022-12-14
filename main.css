@@ -1,9 +1,9 @@
 body{
-  padding: 200px;
+  margin: 0px;
   display: flex;
   height: 100vh;
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: left;
   background-color: rgb(43, 43, 82);
   color: white;
 }
@@ -17,8 +17,9 @@ p{
 .mainContainer{
   margin: 0px;
   background-color: rgb(60, 61, 75);
-  width: 470px;
+  min-width: 470px;
   min-height: 400px;
+  height: fit-content;
 
   border-radius: 25px;
   border-style: solid;
